@@ -1,0 +1,65 @@
+page-dashboard {
+
+    .lineAll{
+        background-color: map-get($colors, accent);
+        //height:30px;
+    }
+
+    .segment-md .segment-button.activated, .segment-md .segment-button.segment-activated { 
+        background-color: map-get($colors, accent);
+        color:white;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-color: map-get($colors, accent);
+    }
+
+
+    .addButton {
+        font-size: 1000%;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .optionsButton {
+        font-size : 120%;
+    }
+
+    .button-outline-md-primary {
+        background-color: white;
+    }
+
+    .button-outline-md-primary:hover:not(.disable-hover){
+        background-color: white;
+    }
+
+    .listItems {
+        width:75%;
+    }
+
+    .viewItem {
+        float:left;
+        width:30%;
+    }
+
+    .buttonCrud {
+        float:right;
+        width:20%;
+        margin-right:50%;
+    }
+
+    .buttonCrud ion-icon {
+        font-size : 200%;
+        text-align:center;
+    }
+
+    .filter {
+        display : inline;
+        float:left;
+    }
+
+    
+}
+
+
+
+

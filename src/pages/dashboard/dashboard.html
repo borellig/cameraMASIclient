@@ -1,0 +1,100 @@
+<!--
+  Generated template for the DashboardPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <div class="navigation">
+    <ion-segment [(ngModel)]="onglet" (click)="changeSegment($event)">
+      <ion-segment-button value="users">
+        <ion-icon name="people"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="access">
+        <ion-icon name="car"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="parkings">
+        <ion-icon md-name="local_parking"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="stats">
+        <ion-icon name="stats"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+    <div class="lineAll">
+      <div [ngSwitch]="onglet">
+        <div *ngSwitchCase="'users'">
+          <div class="optionChooser">
+            <button ion-button color="primary" (click)="optionsChooserMethods('drivers')" class="optionsButton">drivers</button>
+          </div>
+        </div>
+        <div *ngSwitchCase="'access'" offset-3>
+
+          <button *ngIf="optionsChooser=='groups'" ion-button color="primary" (click)="optionsChooserMethods('groups')" class="optionsButton">groups</button>
+          <button *ngIf="optionsChooser=='privileges'" outline ion-button color="primary" (click)="optionsChooserMethods('groups')"
+            class="optionsButton">groups</button>
+
+          <button *ngIf="optionsChooser=='privileges'" ion-button color="primary" (click)="optionsChooserMethods('privileges')" class="optionsButton">privileges</button>
+          <button *ngIf="optionsChooser=='groups'" outline ion-button color="primary" (click)="optionsChooserMethods('privileges')"
+            class="optionsButton">privileges</button>
+
+        </div>
+        <div *ngSwitchCase="'parkings'" offset-6>
+
+          <button *ngIf="optionsChooser=='parkings'" ion-button color="primary" (click)="optionsChooserMethods('parkings')" class="optionsButton">parkings</button>
+          <button *ngIf="optionsChooser=='access'" outline ion-button color="primary" (click)="optionsChooserMethods('parkings')" class="optionsButton">parkings</button>
+
+          <button *ngIf="optionsChooser=='access'" ion-button color="primary" (click)="optionsChooserMethods('access')" class="optionsButton">access</button>
+          <button *ngIf="optionsChooser=='parkings'" outline ion-button color="primary" (click)="optionsChooserMethods('access')" class="optionsButton">access</button>
+        </div>
+        <div *ngSwitchCase="'stats'" offset-9>
+
+          <button *ngIf="optionsChooser=='users'" ion-button color="primary" (click)="optionsChooserMethods('users')" class="optionsButton">users</button>
+          <button *ngIf="optionsChooser=='parkingsStats'" outline ion-button color="primary" (click)="optionsChooserMethods('users')"
+            class="optionsButton">users</button>
+
+          <button *ngIf="optionsChooser=='parkingsStats'" ion-button color="primary" (click)="optionsChooserMethods('parkingsStats')"
+            class="optionsButton">parking</button>
+          <button *ngIf="optionsChooser=='users'" outline ion-button color="primary" (click)="optionsChooserMethods('parkingsStats')"
+            class="optionsButton">parking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-header>
+
+
+<ion-content padding class="back">
+  <br/><!-- <ion-img src="../../assets/icon/favicon.ico" class="logo"></ion-img> -->
+
+  <div [ngSwitch]="onglet" col-10 offset-1>
+    <!-- <ion-icon col-1 offset-10 color="primary" name="add-circle" class="addButton" (click)="addMethods()"></ion-icon> -->
+    <ion-item class="filter" col-3 offset-4>
+      <ion-label fixed>Filter </ion-label>
+      <ion-select [(ngModel)]="filter">
+        <ion-option *ngFor="let option of filterOptions" [value]="option">{{option}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <button col-2 offset-4 ion-button (click)="addMethods()">Add
+      <ion-icon name="add-circle"></ion-icon>
+    </button>
+    <br/>
+    <ion-list class="listItems">
+      <ion-item *ngFor="let item of listItems; let i = index" (click)="itemClicked(item)">
+        <div class="viewItem" text-wrap *ngIf="onglet=='users'">
+          {{item.nom}} {{item.prenom}}
+        </div>
+        <div class="buttonCrud">
+          <button ion-button color="secondary">
+            <ion-icon name="create"></ion-icon>
+          </button>
+          <button ion-button outline color="danger">
+            <ion-icon name="close-circle"></ion-icon>
+          </button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+
+</ion-content>

@@ -35,6 +35,7 @@ $app-direction: ltr;
 
 $colors: (
   primary:    #488aff,
+  accent:     #264c8d,
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
@@ -79,6 +80,7 @@ $colors: (
 // http://ionicframework.com/docs/ionicons/
 
 @import "ionic.ionicons";
+
 
 
 // Fonts

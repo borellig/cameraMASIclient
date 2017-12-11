@@ -1,0 +1,33 @@
+<ion-content padding class="back">
+    <div class="gauche" col-8>
+        <ion-item>
+            <ion-input type="text" placeholder="Surname" [(ngModel)]="surname"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-input type="text" placeholder="Firstname" [(ngModel)]="firstname"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>Group </ion-label>
+            <ion-select [(ngModel)]="group">
+                <ion-option *ngFor="let item of itemGroups" [value]="item">{{item}}</ion-option>
+            </ion-select>
+        </ion-item>
+        <br/>
+        <ion-item>
+            <ion-input type="email" placeholder="email" [(ngModel)]="email"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-input type="text" placeholder="password" [(ngModel)]="password" show-hide-input></ion-input>
+            <button ion-button item-right (click)="generatePass()">generate</button>
+        </ion-item>
+
+    </div>
+    <div class="droite" col-4>
+        <ion-img class="photo"></ion-img>
+    </div>
+    <div class="bas">
+        <button ion-button color="secondary" (click)="confirm()" [disabled]="buttonDisabled()">Save</button>
+        <button ion-button color="danger" (click)="dismiss()">Cancel</button>
+    </div>
+
+</ion-content>
