@@ -14,7 +14,8 @@ import { Http } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
 import 'rxjs/add/operator/map'
 
-
+var ipServer = "http://10.113.101.68";
+var portServer = ":3000";
 
 /**
  * Generated class for the DashboardPage page.
@@ -39,7 +40,7 @@ export class DashboardPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public toastCtrl:ToastController, public http: Http) {
     this.filterOptions = new Array<String>();
     this.listItems = new Array<Object>();
-    this.http.get("http://10.113.101.68:3000/users").map(res => res.json()).subscribe(data => {
+    this.http.get(ipServer + portServer +"/users").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.group);
         this.listItems.push(user);
@@ -124,7 +125,28 @@ export class DashboardPage {
       case "users":
         this.getAllUsers();
         break;
-    
+      case "groups":
+        this.getAllGroups();
+        break;
+      case "privileges":
+        this.getAllPrivileges();
+        break;
+      case "access":
+        this.getAllAccess();
+        break
+      case "parkings":
+        this.getAllParkings();
+        break;
+      case "activePeriods":
+        this.getAllActivePeriods();
+        break;
+      case "passage":
+        this.getAllPassages();
+        break;
+      case "vehicule":
+        this.getAllVehicules();
+        break;
+        
       default:
         break;
     }
@@ -134,8 +156,10 @@ export class DashboardPage {
     console.log("itemClicked", item);
   }
 
+
+
   getAllUsers(){
-    this.http.get("http://10.113.101.68:3000/users").map(res => res.json()).subscribe(data => {
+    this.http.get(ipServer + portServer + "/users").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.group);
         this.listItems.push(user);
@@ -144,6 +168,75 @@ export class DashboardPage {
   }
 
 
+  // Groupes
+  getAllGroups(){
+    this.http.get(ipServer + portServer + "/groups").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let group = new Group(element.idGroup, element.nom, element.state);
+        this.listItems.push(group);
+      });
+    });
+  }
+
+  // Privilèges
+  getAllPrivileges(){
+    this.http.get(ipServer + portServer + "/privileges").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let privilege = new Privilege(element.idPrivilege, element.nom, element.state);
+        this.listItems.push(privilege);
+      });
+    });
+  }
+
+  // Access
+  getAllAccess(){
+    this.http.get(ipServer + portServer + "/access").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let access = new Access(element.idAccess, element.fk_parking);
+        this.listItems.push(access);
+      });
+    });
+  }
+
+  // Parkings
+  getAllParkings(){
+    this.http.get(ipServer + portServer + "/parkings").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let parking = new Parking(element.idParking, element.nom);
+        this.listItems.push(parking);
+      });
+    });
+  }
+
+  // ActivePeriods
+  getAllActivePeriods(){
+    this.http.get(ipServer + portServer + "/activePeriods").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let activePeriod = new ActivePeriod(element.idActivePeriod, element.date, element.duration, element.fk_privilege);
+        this.listItems.push(activePeriod);
+      });
+    });
+  }
+
+  // Passage
+  getAllPassages(){
+    this.http.get(ipServer + portServer + "/passages").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let passage = new Passage(element.idPassage, element.date, element.direction, element.fk_user, element.fk_vehicule, element.fk_access);
+        this.listItems.push(passage);
+      });
+    });
+  }
+
+  // Vehicule
+  getAllVehicules(){
+    this.http.get(ipServer + portServer + "/vehicules").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let vehicule = new Vehicule(element.plaque, element.state, element.fk_user);
+        this.listItems.push(vehicule);
+      });
+    });
+  }
 
 
 
