@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ViewController, ToastController } from 'ionic-angular';
 import { AddUser } from "./adduser";
+import { AddGroup } from "./addgroup";
 
 import { Vehicule } from "../../app/modele/vehicule"
 import { User } from "../../app/modele/user"
@@ -35,17 +36,12 @@ export class DashboardPage {
   optionsChooser: String = "drivers";
   filter: String = "users";
   filterOptions: Array<String>;
-  listItems: Array<Object>;
+  listItems: Array<any>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public toastCtrl:ToastController, public http: Http) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public toastCtrl: ToastController, public http: Http) {
     this.filterOptions = new Array<String>();
-    this.listItems = new Array<Object>();
-    this.http.get(ipServer + portServer +"/users").map(res => res.json()).subscribe(data => {
-      data.forEach(element => {
-        let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.group);
-        this.listItems.push(user);
-      });
-    });
+    this.listItems = new Array<any>();
+    this.getAllUsers();
   }
 
   ionViewDidLoad() {
@@ -57,6 +53,7 @@ export class DashboardPage {
     switch (this.onglet) {
       case 'access':
         this.optionsChooser = "groups";
+        this.optionsChooserMethods(this.optionsChooser);
         this.filterOptions = new Array<String>();
         this.filter = null;
         this.filterOptions.push("alpha");
@@ -64,7 +61,7 @@ export class DashboardPage {
         this.filterOptions.push("gamma");
         this.filterOptions.push("delta");
         ///////////////////////////////////
-        this.listItems = new Array<User>();
+        //this.listItems = new Array<User>();
         break;
       case 'parkings':
         this.optionsChooser = "parkings";
@@ -76,44 +73,86 @@ export class DashboardPage {
         break;
       default:
         this.filter = "users";
+        this.optionsChooser = "drivers";
+        this.getAllUsers();
         this.listItems = new Array<User>();
     }
   }
 
-  addMethods() {
+  addMethods(item: any) {
     console.log("addMethods", this.onglet);
-    switch (this.onglet) {
-      case "users":
-        this.createUser();
+    switch (this.optionsChooser) {
+      case "drivers":
+        this.createUser(item);
         break;
-    
+      case "groups":
+        this.createGroup(item);
+        break;
+
       default:
         break;
     }
-    
+
   }
 
-  createUser() {
-    const profileModal = this.modalCtrl.create(AddUser);
+  deleteUser(user: User) {
+    console.log(user.idUser);
+    this.http.delete(ipServer + portServer + "/user/" + user.idUser).map(res => res.json()).subscribe(data => {
+      this.toastCtrl.create({
+        message: "Utilisateur " + user.nom + " " + user.prenom + " supprimé...",
+        position: "middle",
+        duration: 1000
+      }).present();
+    })
+    this.listItems.splice(this.listItems.indexOf(user), 1);
+  }
+
+  createUser(item: User) {
+    console.log("create", item)
+    const profileModal = this.modalCtrl.create(AddUser, item);
     profileModal.onDidDismiss(data => {
-      if (data != null){
-        this.toastCtrl.create({
-          message:"Utilisateur "+data.firstname+" "+data.surname+" créé.",
-          position:"middle",
-          duration:1000
-        }).present();
-        let user = new User(-1, data.surname, data.firstname, data.email, data.password, true, data.group);
-        this.listItems.push(user);
+      if (data != -1 && data != null) {
+        let user = new User(data.idUser, data.nom, data.prenom, data.mail, data.password, data.state, data.FK_groupe);
+        if (this.listItems.findIndex(elem => {
+          return elem.idUser == user.idUser;
+        }) == -1) {
+          this.toastCtrl.create({
+            message: "Utilisateur " + data.nom + " " + data.prenom + " créé.",
+            position: "middle",
+            duration: 1000
+          }).present();
+          this.listItems.push(user);
+        }
+        else {
+          this.listItems[this.listItems.findIndex(elem => {
+            return elem.idUser == user.idUser;
+          })] = user;
+          this.toastCtrl.create({
+            message: "Utilisateur " + data.nom + " " + data.prenom + " modifié.",
+            position: "middle",
+            duration: 1000
+          }).present();
+        }
         //ajout DB
       }
       else {
         this.toastCtrl.create({
-          message:"Opération annulée",
-          position:"middle",
-          duration:2000
+          message: "Opération annulée",
+          position: "middle",
+          duration: 2000
         }).present();
       }
     });
+    profileModal.present();
+  }
+
+  isUserModified(user, id) {
+    return user.idUser === id;
+  }
+
+  createGroup(item: User) {
+    console.log("create", item)
+    const profileModal = this.modalCtrl.create(AddGroup, item);
     profileModal.present();
   }
 
@@ -121,32 +160,41 @@ export class DashboardPage {
     this.optionsChooser = name;
     this.filter = null;
     console.log("optionsChooserMethods", this.optionsChooser);
-    switch (this.filter) {
-      case "users":
+    switch (this.optionsChooser) {
+      case "drivers":
+        this.listItems = new Array<any>();
         this.getAllUsers();
         break;
       case "groups":
+        this.listItems = new Array<any>();
         this.getAllGroups();
+        console.log("onglet", this.onglet);
         break;
       case "privileges":
+        this.listItems = new Array<any>();
         this.getAllPrivileges();
         break;
       case "access":
+        this.listItems = new Array<any>();
         this.getAllAccess();
         break
       case "parkings":
+        this.listItems = new Array<any>();
         this.getAllParkings();
         break;
       case "activePeriods":
+        this.listItems = new Array<any>();
         this.getAllActivePeriods();
         break;
       case "passage":
+        this.listItems = new Array<any>();
         this.getAllPassages();
         break;
       case "vehicule":
+        this.listItems = new Array<any>();
         this.getAllVehicules();
         break;
-        
+
       default:
         break;
     }
@@ -158,18 +206,20 @@ export class DashboardPage {
 
 
 
-  getAllUsers(){
+  getAllUsers() {
     this.http.get(ipServer + portServer + "/users").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
-        let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.group);
-        this.listItems.push(user);
+        let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.FK_group);
+        if (user.state) {
+          this.listItems.push(user);
+        }
       });
     });
   }
 
 
   // Groupes
-  getAllGroups(){
+  getAllGroups() {
     this.http.get(ipServer + portServer + "/groups").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let group = new Group(element.idGroup, element.nom, element.state);
@@ -179,7 +229,7 @@ export class DashboardPage {
   }
 
   // Privilèges
-  getAllPrivileges(){
+  getAllPrivileges() {
     this.http.get(ipServer + portServer + "/privileges").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let privilege = new Privilege(element.idPrivilege, element.nom, element.state);
@@ -189,7 +239,7 @@ export class DashboardPage {
   }
 
   // Access
-  getAllAccess(){
+  getAllAccess() {
     this.http.get(ipServer + portServer + "/access").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let access = new Access(element.idAccess, element.fk_parking);
@@ -199,7 +249,7 @@ export class DashboardPage {
   }
 
   // Parkings
-  getAllParkings(){
+  getAllParkings() {
     this.http.get(ipServer + portServer + "/parkings").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let parking = new Parking(element.idParking, element.nom);
@@ -209,7 +259,7 @@ export class DashboardPage {
   }
 
   // ActivePeriods
-  getAllActivePeriods(){
+  getAllActivePeriods() {
     this.http.get(ipServer + portServer + "/activePeriods").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let activePeriod = new ActivePeriod(element.idActivePeriod, element.date, element.duration, element.fk_privilege);
@@ -219,7 +269,7 @@ export class DashboardPage {
   }
 
   // Passage
-  getAllPassages(){
+  getAllPassages() {
     this.http.get(ipServer + portServer + "/passages").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let passage = new Passage(element.idPassage, element.date, element.direction, element.fk_user, element.fk_vehicule, element.fk_access);
@@ -229,7 +279,7 @@ export class DashboardPage {
   }
 
   // Vehicule
-  getAllVehicules(){
+  getAllVehicules() {
     this.http.get(ipServer + portServer + "/vehicules").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let vehicule = new Vehicule(element.plaque, element.state, element.fk_user);

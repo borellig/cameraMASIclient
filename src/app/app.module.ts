@@ -10,6 +10,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DashboardPage } from '../pages/dashboard/dashboard'
 import { AddUser } from '../pages/dashboard/adduser'
+import { AddGroup } from '../pages/dashboard/addgroup'
 import { Http } from '@angular/http';
 import { HttpModule } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
@@ -19,7 +20,8 @@ import { HTTP } from '@ionic-native/http';
     MyApp,
     HomePage,
     DashboardPage,
-    AddUser
+    AddUser,
+    AddGroup
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,8 @@ import { HTTP } from '@ionic-native/http';
     MyApp,
     HomePage,
     DashboardPage,
-    AddUser
+    AddUser,
+    AddGroup
   ],
   providers: [
     StatusBar,

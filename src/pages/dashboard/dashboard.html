@@ -81,15 +81,18 @@
     </button>
     <br/>
     <ion-list class="listItems">
-      <ion-item *ngFor="let item of listItems; let i = index" (click)="itemClicked(item)">
-        <div class="viewItem" text-wrap *ngIf="onglet=='users'">
+      <ion-item *ngFor="let item of listItems; let i = index">
+        <div class="viewItem" text-wrap *ngIf="optionsChooser=='drivers'">
           {{item.nom}} {{item.prenom}}
         </div>
+        <div class="viewItem" text-wrap *ngIf="optionsChooser=='groups'">
+          {{item.nom}}
+        </div>
         <div class="buttonCrud">
-          <button ion-button color="secondary">
+          <button ion-button color="secondary" (click)="addMethods(item)">
             <ion-icon name="create"></ion-icon>
           </button>
-          <button ion-button outline color="danger">
+          <button ion-button outline color="danger" (click)="deleteUser(item)">
             <ion-icon name="close-circle"></ion-icon>
           </button>
         </div>

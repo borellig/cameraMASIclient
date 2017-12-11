@@ -9,7 +9,7 @@
         <ion-item>
             <ion-label fixed>Group </ion-label>
             <ion-select [(ngModel)]="group">
-                <ion-option *ngFor="let item of itemGroups" [value]="item">{{item}}</ion-option>
+                <ion-option *ngFor="let item of itemGroups" [value]="item.idGroup">{{item.nom}}</ion-option>
             </ion-select>
         </ion-item>
         <br/>

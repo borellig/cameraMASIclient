@@ -6,7 +6,7 @@ export class User {
   mail:String;
   password:String;
   state:boolean;
-  group:number;
+  FK_groupe:number;
 
   constructor(idUser:number, nom:String, prenom:String, mail:String, password:String, state:boolean, group:number) {
     this.idUser=idUser;
@@ -15,7 +15,7 @@ export class User {
     this.mail=mail;
     this.password=password;
     this.state=state;
-    this.group=group;
+    this.FK_groupe=group;
   }
 
   

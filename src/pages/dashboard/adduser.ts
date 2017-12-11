@@ -4,6 +4,7 @@ import { User } from '../../app/modele/user';
 import { Http } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
 import 'rxjs/add/operator/map'
+import { Group } from '../../app/modele/group';
 
 
 @Component({
@@ -12,39 +13,66 @@ import 'rxjs/add/operator/map'
 })
 export class AddUser {
 
-    itemGroups: Array<String>;
+    itemGroups: Array<Group>;
 
     firstname: string = null;
     surname: string = null;
-    group: string = null;
+    group: number = null;
     email: string = null;
     password: String = null;
 
-    constructor(params: NavParams, public viewCtrl: ViewController, public http: Http) {
+    constructor(public params: NavParams, public viewCtrl: ViewController, public http: Http) {
         console.log("modal lancé");
-        this.itemGroups = new Array<String>("grp1", "grp2", "grp3", "grp4");
+        console.log("avec params");
+        this.surname = params.data.nom;
+        this.firstname = params.data.prenom;
+        this.email = params.data.mail;
+        this.password = params.data.password;
+        this.itemGroups = new Array<Group>();
+        this.http.get("http://10.113.101.68:3000/groups").map(res => res.json()).subscribe(data => {
+            console.log(data);
+            console.log("fk", params.data.FK_groupe);
+            data.forEach(element => {
+                var group = new Group(element.idGroup, element.nom, element.state);
+                this.itemGroups.push(group);
+                console.log("test", group.idGroup==params.data.FK_groupe);
+                if (group.idGroup==params.data.FK_groupe){
+                    this.group=group.idGroup;
+                }
+            });
+            console.log("tab", this.itemGroups);
+        });
+        
     }
 
     confirm() {
-        let user = {
-            "firstname": this.firstname,
-            "surname": this.surname,
-            "group": this.group,
-            "email": this.email,
-            "password": this.password
+        var newUser;
+        var user = {
+            "nom": this.firstname,
+            "prenom": this.surname,
+            "mail": this.email,
+            "password": this.password,
+            "FK_groupe": this.group,
         };
-        // this.http.post("http://10.113.101.71/", user)
-        // .subscribe(data => {
-        //   console.log(data);
-        // });
-        // this.http.post("http://10.113.101.68:3000/lol").subscribe(data => {
-        //     console.log(data)
-        // })
-        this.viewCtrl.dismiss(user);
+        if (this.params.data.idUser != null) {
+            newUser = new User(this.params.data.idUser, user.nom, user.prenom, user.mail, user.password, this.params.data.state, user.FK_groupe);
+            this.http.put("http://10.113.101.68:3000/user", newUser).map(res => res.json()).subscribe(data => {
+                this.viewCtrl.dismiss(newUser);
+            });
+        }
+        else {
+            this.http.post("http://10.113.101.68:3000/user", user).map(res => res.json()).subscribe(data => {
+                newUser = new User(data, user.nom, user.prenom, user.mail, user.password, true, 1);
+                console.log(newUser);
+                this.viewCtrl.dismiss(newUser);
+            });
+        }
+        //let JSONuser=JSON.stringify(user);  
     }
 
     dismiss() {
-        this.viewCtrl.dismiss();
+        console.log("fin")
+        this.viewCtrl.dismiss(-1);
     }
 
     generatePass() {
