@@ -1,0 +1,25 @@
+<ion-content padding class="back">
+    <ion-item class="nomGauche">
+        <ion-input type="text" placeholder="Parking name" [(ngModel)]="nom"></ion-input>
+    </ion-item>
+    <button ion-button color="primary" (click)="validate()" class="buttonDroite">Confirm</button>
+    <button ion-button color="danger" (click)="cancel()" class="buttonfin">Cancel</button>
+
+    <div class="gauche">
+
+        <ion-list>
+            <ul *ngFor="let item of listAccessAssocie" (click)="onList(item)" [style.background-color]="getColorOn(item)">{{item.nom}}</ul>
+        </ion-list>
+    </div>
+    <div class="milieu">
+        <button ion-button outline color="primary"(click)="addAccess()"><ion-icon name="arrow-round-back"></ion-icon></button>
+        <br/>
+        <button ion-button outline color="danger"(click)="removeAccess()"><ion-icon name="arrow-round-forward"></ion-icon></button>
+    </div>
+    <div class="droite">
+            <ion-list>
+                    <ul *ngFor="let item of listAccessNotAssocie" (click)="offList(item)" [style.background-color]="getColorOff(item)">{{item.nom}}</ul>
+                </ion-list>
+    </div>
+
+</ion-content>

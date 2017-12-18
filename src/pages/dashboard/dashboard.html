@@ -66,7 +66,8 @@
 
 
 <ion-content padding class="back">
-  <br/><!-- <ion-img src="../../assets/icon/favicon.ico" class="logo"></ion-img> -->
+  <br/>
+  <!-- <ion-img src="../../assets/icon/favicon.ico" class="logo"></ion-img> -->
 
   <div [ngSwitch]="onglet" col-10 offset-1>
     <!-- <ion-icon col-1 offset-10 color="primary" name="add-circle" class="addButton" (click)="addMethods()"></ion-icon> -->
@@ -80,7 +81,7 @@
       <ion-icon name="add-circle"></ion-icon>
     </button>
     <br/>
-    <ion-list class="listItems">
+    <ion-list class="listItems" *ngIf="onglet!='stats'">
       <ion-item *ngFor="let item of listItems; let i = index">
         <div class="viewItem" text-wrap *ngIf="optionsChooser=='drivers'">
           {{item.nom}} {{item.prenom}}
@@ -88,16 +89,34 @@
         <div class="viewItem" text-wrap *ngIf="optionsChooser=='groups'">
           {{item.nom}}
         </div>
+        <div class="viewItem" text-wrap *ngIf="optionsChooser=='parkings'">
+          {{item.nom}}
+        </div>
         <div class="buttonCrud">
           <button ion-button color="secondary" (click)="addMethods(item)">
             <ion-icon name="create"></ion-icon>
           </button>
-          <button ion-button outline color="danger" (click)="deleteUser(item)">
+          <button ion-button outline color="danger" (click)="deleteMethods(item)">
             <ion-icon name="close-circle"></ion-icon>
           </button>
         </div>
       </ion-item>
     </ion-list>
+    <div *ngIf="onglet=='stats'">
+        <ion-list class="listGauche">
+          <ion-item *ngFor="let user of listItems">{{user.prenom}} {{user.nom}}</ion-item>
+        </ion-list>
+        <table class="listDroite">
+          <tr><th>Parking</th><th>Person</th><th>Vehicle</th><th>Date Time</th><th>In / Out</th></tr>
+          <tr *ngFor="let passage of tabAnnexe">
+            <td>{{passage.nomParking}}</td>
+            <td>{{passage.person}}</td>
+            <td>{{passage.FK_vehicule}}</td>
+            <td>{{passage.date}}</td>
+            <td>{{passage.direction}}</td>
+          </tr>
+        </table>
+    </div>
   </div>
 
 </ion-content>

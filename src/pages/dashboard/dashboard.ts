@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ViewController, ToastController } from 'ionic-angular';
 import { AddUser } from "./adduser";
 import { AddGroup } from "./addgroup";
+import { AddParking } from "./addparking";
 
 import { Vehicule } from "../../app/modele/vehicule"
 import { User } from "../../app/modele/user"
@@ -15,7 +16,7 @@ import { Http } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
 import 'rxjs/add/operator/map'
 
-var ipServer = "http://10.113.101.68";
+var ipServer = "http://10.113.101.89";
 var portServer = ":3000";
 
 /**
@@ -37,6 +38,7 @@ export class DashboardPage {
   filter: String = "users";
   filterOptions: Array<String>;
   listItems: Array<any>;
+  tabAnnexe: Array<any>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public toastCtrl: ToastController, public http: Http) {
     this.filterOptions = new Array<String>();
@@ -49,7 +51,7 @@ export class DashboardPage {
   }
 
   changeSegment(event) {
-    console.log("changeSegment", this.onglet);
+    console.log("changeSegment, Onglet", this.onglet);
     switch (this.onglet) {
       case 'access':
         this.optionsChooser = "groups";
@@ -65,11 +67,15 @@ export class DashboardPage {
         break;
       case 'parkings':
         this.optionsChooser = "parkings";
+        this.optionsChooserMethods(this.optionsChooser);
         this.listItems = new Array<Parking>();
         break;
       case 'stats':
         this.optionsChooser = "users";
         this.listItems = new Array<User>();
+        this.getAllUsers();
+        this.tabAnnexe = new Array<any>();
+        this.getAllPassageUser();
         break;
       default:
         this.filter = "users";
@@ -88,11 +94,29 @@ export class DashboardPage {
       case "groups":
         this.createGroup(item);
         break;
-
+      case "parkings":
+        this.createParking(item);
+        break;
       default:
         break;
     }
 
+  }
+
+  deleteMethods(item: any) {
+    switch (this.optionsChooser) {
+      case "drivers":
+        this.deleteUser(item);
+        break;
+      case "groups":
+        this.deleteGroup(item);
+        break;
+      case "parkings":
+        this.deleteParking(item);
+        break;
+      default:
+        break;
+    }
   }
 
   deleteUser(user: User) {
@@ -105,6 +129,28 @@ export class DashboardPage {
       }).present();
     })
     this.listItems.splice(this.listItems.indexOf(user), 1);
+  }
+
+  deleteGroup(group: Group) {
+    this.http.delete(ipServer + portServer + "/group/" + group.idGroup).map(res => res.json()).subscribe(data => {
+      this.toastCtrl.create({
+        message: "Groupe " + group.nom + " supprimé...",
+        position: "middle",
+        duration: 1000
+      }).present();
+    })
+    this.listItems.splice(this.listItems.indexOf(group), 1);
+  }
+
+  deleteParking(parking: Parking) {
+    this.http.delete(ipServer + portServer + "/parking/" + parking.idParking).map(res => res.json()).subscribe(data => {
+      this.toastCtrl.create({
+        message: "Parking " + parking.nom + " supprimé...",
+        position: "middle",
+        duration: 1000
+      }).present();
+    })
+    this.listItems.splice(this.listItems.indexOf(parking), 1);
   }
 
   createUser(item: User) {
@@ -153,6 +199,12 @@ export class DashboardPage {
   createGroup(item: User) {
     console.log("create", item)
     const profileModal = this.modalCtrl.create(AddGroup, item);
+    profileModal.present();
+  }
+
+  createParking(item: User) {
+    console.log("create", item)
+    const profileModal = this.modalCtrl.create(AddParking, item);
     profileModal.present();
   }
 
@@ -242,7 +294,7 @@ export class DashboardPage {
   getAllAccess() {
     this.http.get(ipServer + portServer + "/access").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
-        let access = new Access(element.idAccess, element.fk_parking);
+        let access = new Access(element.nom, element.idAccess, element.fk_parking);
         this.listItems.push(access);
       });
     });
@@ -287,6 +339,21 @@ export class DashboardPage {
       });
     });
   }
+
+  getAllPassageUser() {
+    this.http.get(ipServer + portServer + "/passages").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        let passage: any;
+        passage = new Object();
+        passage.nomParking = element.nomParking;
+        passage.person = element.prenomUser + " " + element.nomUser;
+        passage.FK_vehicule = element.FK_vehicule;
+        passage.date = new Date(element.date).toLocaleString();
+        passage.direction = element.direction;
+        this.tabAnnexe.push(passage);
+      });
+    });
+}
 
 
 

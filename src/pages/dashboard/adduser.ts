@@ -29,7 +29,7 @@ export class AddUser {
         this.email = params.data.mail;
         this.password = params.data.password;
         this.itemGroups = new Array<Group>();
-        this.http.get("http://10.113.101.68:3000/groups").map(res => res.json()).subscribe(data => {
+        this.http.get("http://10.113.101.89:3000/groups").map(res => res.json()).subscribe(data => {
             console.log(data);
             console.log("fk", params.data.FK_groupe);
             data.forEach(element => {
@@ -48,20 +48,20 @@ export class AddUser {
     confirm() {
         var newUser;
         var user = {
-            "nom": this.firstname,
-            "prenom": this.surname,
+            "nom": this.surname,
+            "prenom": this.firstname,
             "mail": this.email,
             "password": this.password,
             "FK_groupe": this.group,
         };
         if (this.params.data.idUser != null) {
             newUser = new User(this.params.data.idUser, user.nom, user.prenom, user.mail, user.password, this.params.data.state, user.FK_groupe);
-            this.http.put("http://10.113.101.68:3000/user", newUser).map(res => res.json()).subscribe(data => {
+            this.http.put("http://10.113.101.89:3000/user", newUser).map(res => res.json()).subscribe(data => {
                 this.viewCtrl.dismiss(newUser);
             });
         }
         else {
-            this.http.post("http://10.113.101.68:3000/user", user).map(res => res.json()).subscribe(data => {
+            this.http.post("http://10.113.101.89:3000/user", user).map(res => res.json()).subscribe(data => {
                 newUser = new User(data, user.nom, user.prenom, user.mail, user.password, true, 1);
                 console.log(newUser);
                 this.viewCtrl.dismiss(newUser);

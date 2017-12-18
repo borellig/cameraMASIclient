@@ -57,6 +57,27 @@ page-dashboard {
         float:left;
     }
 
+    .listGauche {
+        clear:both;
+        float:left;
+        width:45%;
+    }
+
+    .listDroite {
+        float:right;
+        width:45%;
+    }
+
+    table {
+        text-align: center;
+    }
+
+    table td {
+        background-color:white;
+        border:1px solid gray;
+        height:200%;
+    }
+
     
 }
 
