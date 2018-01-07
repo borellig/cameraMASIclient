@@ -1,0 +1,22 @@
+page-view-user {
+
+    .toolbar-background {
+        background-color: map-get($colors, accent);
+      }
+
+      .toolbar-title {
+          color:white;
+          font-size:2em;
+      }
+
+    table {
+        text-align: center;
+    }
+
+    table td {
+        background-color:white;
+        border:1px solid gray;
+        height:200%;
+    }
+
+}

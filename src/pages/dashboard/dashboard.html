@@ -71,13 +71,13 @@
 
   <div [ngSwitch]="onglet" col-10 offset-1>
     <!-- <ion-icon col-1 offset-10 color="primary" name="add-circle" class="addButton" (click)="addMethods()"></ion-icon> -->
-    <ion-item class="filter" col-3 offset-4>
+    <!-- <ion-item class="filter" col-3 offset-4>
       <ion-label fixed>Filter </ion-label>
       <ion-select [(ngModel)]="filter">
         <ion-option *ngFor="let option of filterOptions" [value]="option">{{option}}</ion-option>
       </ion-select>
-    </ion-item>
-    <button col-2 offset-4 ion-button (click)="addMethods()">Add
+    </ion-item> -->
+    <button *ngIf="onglet!='stats'" col-2 offset-4 ion-button (click)="addMethods()">Add
       <ion-icon name="add-circle"></ion-icon>
     </button>
     <br/>
@@ -92,6 +92,12 @@
         <div class="viewItem" text-wrap *ngIf="optionsChooser=='parkings'">
           {{item.nom}}
         </div>
+        <div class="viewItem" text-wrap *ngIf="optionsChooser=='access'">
+          {{item.nom}}
+        </div>
+        <div class="viewItem" text-wrap *ngIf="optionsChooser=='privileges'">
+          {{item.nom}}
+        </div>
         <div class="buttonCrud">
           <button ion-button color="secondary" (click)="addMethods(item)">
             <ion-icon name="create"></ion-icon>
@@ -104,7 +110,7 @@
     </ion-list>
     <div *ngIf="onglet=='stats'">
         <ion-list class="listGauche">
-          <ion-item *ngFor="let user of listItems">{{user.prenom}} {{user.nom}}</ion-item>
+          <ion-item *ngFor="let user of listItems" (click)="tabFilter(user)">{{user.prenom}} {{user.nom}}</ion-item>
         </ion-list>
         <table class="listDroite">
           <tr><th>Parking</th><th>Person</th><th>Vehicle</th><th>Date Time</th><th>In / Out</th></tr>

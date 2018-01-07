@@ -7,6 +7,9 @@
             <ion-input type="text" placeholder="Firstname" [(ngModel)]="firstname"></ion-input>
         </ion-item>
         <ion-item>
+                <ion-input type="text" placeholder="Vehicle" [(ngModel)]="vehicule"></ion-input>
+            </ion-item>
+        <ion-item>
             <ion-label fixed>Group </ion-label>
             <ion-select [(ngModel)]="group">
                 <ion-option *ngFor="let item of itemGroups" [value]="item.idGroup">{{item.nom}}</ion-option>

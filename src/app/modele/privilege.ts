@@ -1,11 +1,16 @@
-export class Privilege {
+export class Privileges  {
+    
     idPrivilege:number;
-    nom:String;
-    state:String;
+    nom:string;
+    state:string;
 
-    constructor(idPrivilege:number, nom:String, state:String){
-        this.idPrivilege=idPrivilege;
+    constructor(nom:string, idPrivilege:number, state:string){
         this.nom=nom;
+        this.idPrivilege=idPrivilege;
         this.state=state;
+    }
+
+    getall(){
+        console.log("test");
     }
 }

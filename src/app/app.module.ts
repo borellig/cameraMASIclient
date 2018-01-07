@@ -9,6 +9,7 @@ import { MaterialIconsModule } from 'ionic2-material-icons';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DashboardPage } from '../pages/dashboard/dashboard'
+import { ViewUserPage } from '../pages/view-user/view-user'
 import { AddUser } from '../pages/dashboard/adduser'
 import { AddGroup } from '../pages/dashboard/addgroup'
 import { AddPrivilege } from '../pages/dashboard/addprivilege'
@@ -25,7 +26,8 @@ import { HTTP } from '@ionic-native/http';
     AddUser,
     AddGroup,
     AddPrivilege,
-    AddParking
+    AddParking,
+    ViewUserPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { HTTP } from '@ionic-native/http';
     AddUser,
     AddGroup,
     AddPrivilege,
-    AddParking
+    AddParking,
+    ViewUserPage
   ],
   providers: [
     StatusBar,

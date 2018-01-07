@@ -5,8 +5,27 @@
   Ionic pages and navigation.
 -->
 <ion-content padding class="back">
-    <ion-item>
-        <ion-input type="text" placeholder="Surname" [(ngModel)]="surname"></ion-input>
-    </ion-item>
-
-</ion-content>
+        <ion-item class="nomGauche">
+                <ion-input type="text" placeholder="group name" [(ngModel)]="nom"></ion-input>
+            </ion-item>
+            <button ion-button color="primary" (click)="validate()" class="buttonDroite">Confirm</button>
+            <button ion-button color="danger" (click)="cancel()" class="buttonfin">Cancel</button>
+        
+            <div class="gauche">
+        
+                <ion-list>
+                    <ul *ngFor="let item of listPrivilegeAssocie" (click)="onList(item)" [style.background-color]="getColorOn(item)">{{item.nom}}</ul>
+                </ion-list>
+            </div>
+            <div class="milieu">
+                <button ion-button outline color="primary"(click)="addPrivilege()"><ion-icon name="arrow-round-back"></ion-icon></button>
+                <br/>
+                <button ion-button outline color="danger"(click)="removePrivilege()"><ion-icon name="arrow-round-forward"></ion-icon></button>
+            </div>
+            <div class="droite">
+                    <ion-list>
+                            <ul *ngFor="let item of listPrivilegeNotAssocie" (click)="offList(item)" [style.background-color]="getColorOff(item)">{{item.nom}}</ul>
+                        </ion-list>
+            </div>
+        
+        </ion-content>

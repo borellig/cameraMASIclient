@@ -1,3 +1,47 @@
-page-addgroup {
+add-group {
+    .nomGauche{
+        float:left;
+        width:60%;
+    }
 
+    .buttonDroite{
+        float:left;
+        width:20%;
+        margin-left: 2%;
+    }
+
+    .buttonFin{
+        float:right;
+        width:20%;
+    }
+
+
+    .gauche {
+        margin-top:5%;
+        clear: both;
+        float:left;
+        width:40%;
+        background-color:map-get($colors, primary);
+        border-radius: 15px;
+    }
+
+    .milieu{
+        margin-top:5%;
+        widows: 20%;
+        float:left;
+        margin-left:1%;
+    }
+
+    .milieu button {
+        margin-top:5%;
+        font-size: 30px;
+    }
+
+    .droite {
+        margin-top:5%;
+        float:right;
+        width:40%;
+        background-color: lightgray;
+        border-radius: 15px;
+    }
 }

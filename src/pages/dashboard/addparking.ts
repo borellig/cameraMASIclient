@@ -23,7 +23,7 @@ export class AddParking {
         this.listAccessAssocie = new Array<Access>();
         this.listAccessNotAssocie = new Array<Access>();
         if (params.data.idParking != undefined) {
-            this.http.get("http://10.113.101.89:3000/access/" + params.data.idParking + "/on").map(res => res.json()).subscribe(data => {
+            this.http.get("http://10.113.101.57:3000/access/" + params.data.idParking + "/on").map(res => res.json()).subscribe(data => {
                 console.log("data", data);
                 data.forEach(element => {
                     var access = new Access(element.nom, element.idAccess, element.FK_parking);
@@ -31,7 +31,7 @@ export class AddParking {
                 });
                 console.log("liston", this.listAccessAssocie)
             });
-            this.http.get("http://10.113.101.89:3000/access/" + params.data.idParking + "/off").map(res => res.json()).subscribe(data => {
+            this.http.get("http://10.113.101.57:3000/access/" + params.data.idParking + "/off").map(res => res.json()).subscribe(data => {
                 data.forEach(element => {
                     var access = new Access(element.nom, element.idAccess, element.FK_parking);
                     this.listAccessNotAssocie.push(access);
@@ -39,7 +39,7 @@ export class AddParking {
             });
         }
         else {
-            this.http.get("http://10.113.101.89:3000/access/all").map(res => res.json()).subscribe(data => {
+            this.http.get("http://10.113.101.57:3000/access/all").map(res => res.json()).subscribe(data => {
                 data.forEach(element => {
                     var access = new Access(element.nom, element.idAccess, element.FK_parking);
                     this.listAccessNotAssocie.push(access);
@@ -134,13 +134,26 @@ export class AddParking {
     validate() {
         let newParking: any;
         newParking = new Object();
-        newParking.idParking = this.params.data.idParking;
-        newParking.nom = this.nom;
-        newParking.access = this.listAccessAssocie;
-        console.log("newP",newParking);
-        this.http.put("http://10.113.101.89:3000/parking/", newParking).map(res => res.json()).subscribe(data => {
-            console.log(data);
-        });
+        if (this.params.data.idParking == undefined) {
+            this.http.post("http://10.113.101.57:3000/parking", {nom:this.nom}).map(res => res.json()).subscribe(data => {
+                newParking.idParking = data;
+                newParking.nom = this.nom;
+                newParking.access = this.listAccessAssocie;
+                console.log("newP", newParking);
+                this.http.put("http://10.113.101.57:3000/parking/", newParking).map(res => res.json()).subscribe(data => {
+                    console.log(data);
+                });
+            });
+        }
+        else {
+            newParking.idParking = this.params.data.idParking;
+            newParking.nom = this.nom;
+            newParking.access = this.listAccessAssocie;
+            console.log("newP", newParking);
+            this.http.put("http://10.113.101.57:3000/parking/", newParking).map(res => res.json()).subscribe(data => {
+                console.log(data);
+            });
+        }
         this.viewCtrl.dismiss();
     }
 

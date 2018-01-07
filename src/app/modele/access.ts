@@ -1,4 +1,5 @@
 export class Access {
+    
     nom:String
     idAccess:number;
     fk_parking:number;

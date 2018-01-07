@@ -9,9 +9,10 @@
 <ion-content padding class="back">
   <ion-img src="../../assets/icon/favicon.ico" class="logo"></ion-img>
   <div class="formConnexion">
-    <ion-input type="email" placeholder="Email"></ion-input>
-    <ion-input type="password" placeholder="MotDePasse"></ion-input>
+    <ion-input type="email" placeholder="Email" [(ngModel)]="email"></ion-input>
+    <ion-input type="password" placeholder="MotDePasse" [(ngModel)]="password"></ion-input>
     <button ion-button (click)="connexion()">Connexion</button>
   </div>
+  <span *ngIf="phrase!=''">{{phrase}}</span>
 
 </ion-content>

@@ -6,7 +6,7 @@ import { AddParking } from "./addparking";
 
 import { Vehicule } from "../../app/modele/vehicule"
 import { User } from "../../app/modele/user"
-import { Privilege } from "../../app/modele/privilege"
+import { Privileges } from "../../app/modele/privilege"
 import { Passage } from "../../app/modele/passage"
 import { Parking } from "../../app/modele/parking"
 import { Group } from "../../app/modele/group"
@@ -16,7 +16,7 @@ import { Http } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
 import 'rxjs/add/operator/map'
 
-var ipServer = "http://10.113.101.89";
+var ipServer = "http://10.113.101.57";
 var portServer = ":3000";
 
 /**
@@ -158,7 +158,7 @@ export class DashboardPage {
     const profileModal = this.modalCtrl.create(AddUser, item);
     profileModal.onDidDismiss(data => {
       if (data != -1 && data != null) {
-        let user = new User(data.idUser, data.nom, data.prenom, data.mail, data.password, data.state, data.FK_groupe);
+        let user = new User(data.idUser, data.nom, data.prenom, data.mail, data.password, data.state, data.vehicule, data.FK_groupe);
         if (this.listItems.findIndex(elem => {
           return elem.idUser == user.idUser;
         }) == -1) {
@@ -252,6 +252,13 @@ export class DashboardPage {
     }
   }
 
+  tabFilter(user: User) {
+    this.getAllPassageUserParam(user.idUser);
+    // this.tabAnnexe = this.tabAnnexe.filter(element => {
+    //   return element.FK_user == user.idUser;
+    // })
+  }
+
   itemClicked(item: Object, i: number) {
     console.log("itemClicked", item);
   }
@@ -261,9 +268,10 @@ export class DashboardPage {
   getAllUsers() {
     this.http.get(ipServer + portServer + "/users").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
-        let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.FK_group);
+        let user = new User(element.idUser, element.nom, element.prenom, element.mail, element.password, element.state, element.vehicule, element.FK_group);
         if (user.state) {
           this.listItems.push(user);
+          console.log("user----", user);
         }
       });
     });
@@ -284,7 +292,8 @@ export class DashboardPage {
   getAllPrivileges() {
     this.http.get(ipServer + portServer + "/privileges").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
-        let privilege = new Privilege(element.idPrivilege, element.nom, element.state);
+        console.log(data);
+        let privilege = new Privileges(element.nom, element.idPrivilege, element.state);
         this.listItems.push(privilege);
       });
     });
@@ -292,7 +301,7 @@ export class DashboardPage {
 
   // Access
   getAllAccess() {
-    this.http.get(ipServer + portServer + "/access").map(res => res.json()).subscribe(data => {
+    this.http.get(ipServer + portServer + "/access/all").map(res => res.json()).subscribe(data => {
       data.forEach(element => {
         let access = new Access(element.nom, element.idAccess, element.fk_parking);
         this.listItems.push(access);
@@ -350,10 +359,30 @@ export class DashboardPage {
         passage.FK_vehicule = element.FK_vehicule;
         passage.date = new Date(element.date).toLocaleString();
         passage.direction = element.direction;
+        passage.FK_user = element.FK_user;
         this.tabAnnexe.push(passage);
       });
     });
-}
+  }
+
+  getAllPassageUserParam(userId:number) {
+    this.tabAnnexe=new Array<any>();
+    this.http.get(ipServer + portServer + "/passages").map(res => res.json()).subscribe(data => {
+      data.forEach(element => {
+        if(element.FK_user==userId){
+          let passage: any;
+          passage = new Object();
+          passage.nomParking = element.nomParking;
+          passage.person = element.prenomUser + " " + element.nomUser;
+          passage.FK_vehicule = element.FK_vehicule;
+          passage.date = new Date(element.date).toLocaleString();
+          passage.direction = element.direction;
+          passage.FK_user=element.FK_user;
+          this.tabAnnexe.push(passage);
+        }
+      });
+    });
+  }
 
 
 

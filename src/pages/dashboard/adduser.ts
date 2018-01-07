@@ -20,29 +20,32 @@ export class AddUser {
     group: number = null;
     email: string = null;
     password: String = null;
+    vehicule: string;
 
     constructor(public params: NavParams, public viewCtrl: ViewController, public http: Http) {
         console.log("modal lancé");
         console.log("avec params");
+        console.log("le user lancé", params.data);
         this.surname = params.data.nom;
         this.firstname = params.data.prenom;
         this.email = params.data.mail;
         this.password = params.data.password;
+        this.vehicule = params.data.vehicule;
         this.itemGroups = new Array<Group>();
-        this.http.get("http://10.113.101.89:3000/groups").map(res => res.json()).subscribe(data => {
+        this.http.get("http://10.113.101.57:3000/groups").map(res => res.json()).subscribe(data => {
             console.log(data);
             console.log("fk", params.data.FK_groupe);
             data.forEach(element => {
                 var group = new Group(element.idGroup, element.nom, element.state);
                 this.itemGroups.push(group);
-                console.log("test", group.idGroup==params.data.FK_groupe);
-                if (group.idGroup==params.data.FK_groupe){
-                    this.group=group.idGroup;
+                console.log("test", group.idGroup == params.data.FK_groupe);
+                if (group.idGroup == params.data.FK_groupe) {
+                    this.group = group.idGroup;
                 }
             });
             console.log("tab", this.itemGroups);
         });
-        
+
     }
 
     confirm() {
@@ -52,19 +55,28 @@ export class AddUser {
             "prenom": this.firstname,
             "mail": this.email,
             "password": this.password,
+            "vehicule": this.vehicule,
             "FK_groupe": this.group,
         };
         if (this.params.data.idUser != null) {
-            newUser = new User(this.params.data.idUser, user.nom, user.prenom, user.mail, user.password, this.params.data.state, user.FK_groupe);
-            this.http.put("http://10.113.101.89:3000/user", newUser).map(res => res.json()).subscribe(data => {
+            newUser = new User(this.params.data.idUser, user.nom, user.prenom, user.mail, user.password, this.params.data.state, user.vehicule, user.FK_groupe);
+            this.http.put("http://10.113.101.57:3000/user", newUser).map(res => res.json()).subscribe(data => {
+                console.log("préboom");
+                this.http.post("http://10.113.101.57:3000/vehicule", { idUser: this.params.data.idUser, plaque: user.vehicule }).map(res => res.json()).subscribe(data => {
+                console.log("boom")    
                 this.viewCtrl.dismiss(newUser);
+                });
             });
         }
         else {
-            this.http.post("http://10.113.101.89:3000/user", user).map(res => res.json()).subscribe(data => {
-                newUser = new User(data, user.nom, user.prenom, user.mail, user.password, true, 1);
+            this.http.post("http://10.113.101.57:3000/user", user).map(res => res.json()).subscribe(data => {
+                newUser = new User(data, user.nom, user.prenom, user.mail, user.password, true, user.vehicule, 1);
                 console.log(newUser);
-                this.viewCtrl.dismiss(newUser);
+                this.http.post("http://10.113.101.57:3000/vehicule", { idUser: data, plaque: user.vehicule }).map(res => res.json()).subscribe(data => {
+                    this.viewCtrl.dismiss(newUser);
+                });
+
+
             });
         }
         //let JSONuser=JSON.stringify(user);  

@@ -1,0 +1,28 @@
+<!--
+  Generated template for the ViewUserPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Parking manager</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding class="back">
+    
+        <table class="listDroite">
+            <tr><th>Parking</th><th>Vehicle</th><th>Date Time</th><th>In / Out</th></tr>
+            <tr *ngFor="let passage of tabPassage">
+              <td>{{passage.nomParking}}</td>
+              <td>{{passage.FK_vehicule}}</td>
+              <td>{{passage.date}}</td>
+              <td>{{passage.direction}}</td>
+            </tr>
+          </table>
+    
+    </ion-content>
